@@ -9,8 +9,20 @@ exports.getSubscription = async (req, res) => {
   let result = {};
 
   const user = await db.doc(`/users/${data.email}`).get();
-  result.tier = user.data().tier;
-  result.renewTime = user.data().renewTime;
+  // olde user
+  if (user.exists && user.data() && user.data().tier) {
+    result.tier = user.data().tier;
+    result.renewTime = user.data().renewTime;
+  } else {
+    // new user
+    await user.ref.set({
+      tier: "free",
+      renewTime: "",
+    });
+
+    result.tier = "free";
+    result.renewTime = "";
+  }
 
   const subscription = await db
     .doc(`/users/${data.email}/subscription/stripe`)

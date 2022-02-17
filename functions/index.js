@@ -21,10 +21,6 @@ const {
   stripeWebhook,
 } = require("./handlers/payment");
 
-const {
-  setUser
-} = require("./handlers/users")
-
 // stripe webhook - can not have any security rules
 app.post("/subscription/stripe/webhook", stripeWebhook);
 
@@ -37,9 +33,6 @@ app.use(
 );
 
 app.use(authenticate);
-
-// users
-app.get("/users", setUser);
 
 // tasks
 app.get("/tasks", getTasks);
